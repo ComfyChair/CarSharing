@@ -7,9 +7,9 @@ import java.util.logging.Logger;
 
 public class DbCompanyDAO implements CompanyDAO {
     private static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS COMPANY (" +
-            "id INT GENERATED ALWAYS AS IDENTITY(START WITH 0 INCREMENT BY 1), " +
-            "name VARCHAR_IGNORECASE(255) UNIQUE not NULL," +
-            " PRIMARY KEY ( id ))";
+            "id INT GENERATED ALWAYS AS IDENTITY, " +
+            "name VARCHAR_IGNORECASE(255) UNIQUE not NULL, " +
+            "PRIMARY KEY ( id ))";
     private static final String SELECT_ALL = "SELECT * FROM COMPANY";
     private static final String SELECT = "SELECT * FROM COMPANY WHERE id = %d";
     private static final String INSERT_DATA = "INSERT INTO COMPANY VALUES (DEFAULT, '%s')";

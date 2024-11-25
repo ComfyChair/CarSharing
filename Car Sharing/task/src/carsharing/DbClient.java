@@ -21,7 +21,7 @@ class DbClient {
         try (Connection con =  DriverManager.getConnection(url);
              Statement stmt = con.createStatement()) {
             con.setAutoCommit(true);
-            stmt.execute(sql);
+            stmt.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -48,7 +48,7 @@ class DbClient {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                Company company = new Company(id, name);
+                companies.add(new Company(id, name));
             }
         } catch (SQLException e) {
             e.printStackTrace();
