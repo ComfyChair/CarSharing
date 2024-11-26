@@ -1,4 +1,7 @@
-package carsharing;
+package carsharing.dbutil;
+
+import carsharing.model.Car;
+import carsharing.model.Company;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,8 +30,8 @@ class DbClient {
         }
     }
 
-    Company select(String query) {
-        List<Company> companies = selectForList(query);
+    Company selectCompany(String query) {
+        List<Company> companies = selectCompanies(query);
         if (companies.isEmpty()) {
             return null;
         } else if (companies.size() > 1) {
@@ -38,12 +41,12 @@ class DbClient {
         }
     }
 
-    List<Company> selectForList(String query) {
+    List<Company> selectCompanies(String query) {
         List<Company> companies = new ArrayList<>();
 
         try (Connection con = DriverManager.getConnection(url);
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(query)) {
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
             con.setAutoCommit(true);
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -54,5 +57,35 @@ class DbClient {
             e.printStackTrace();
         }
         return companies;
+    }
+
+    Car selectCar(String query) {
+        List<Car> cars = selectCars(query);
+        if (cars.isEmpty()) {
+            return null;
+        } else if (cars.size() > 1) {
+            throw new IllegalStateException("More than one car found for query: " + query);
+        } else {
+            return cars.getFirst();
+        }
+    }
+
+    List<Car> selectCars(String query) {
+        List<Car> car = new ArrayList<>();
+
+        try (Connection con = DriverManager.getConnection(url);
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            con.setAutoCommit(true);
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int companyId = rs.getInt("company_id");
+                car.add(new Car(id, name, companyId));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return car;
     }
 }

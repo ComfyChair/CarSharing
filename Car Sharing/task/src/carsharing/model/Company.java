@@ -1,13 +1,13 @@
-package carsharing;
+package carsharing.model;
 
 public class Company {
     private int id;
     private final String name;
 
-    Company(String name) {
+    public Company(String name) {
         this.name = name;
     }
-    Company(int id, String name) {
+    public Company(int id, String name) {
         this.id = id;
         this.name = name;
     }
