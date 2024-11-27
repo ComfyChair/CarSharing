@@ -19,23 +19,23 @@ public class CompanyDAO implements DataAccessObject<Company> {
     private static final String DELETE_DATA = "DELETE FROM COMPANY WHERE id = %d";
     private static final Path ROOT = Paths.get("src", "carsharing", "db");
     private static final String BASE_URL = "jdbc:h2:./" + ROOT + "/";
-    private final DbClient dbClient;
+    private final DbClient<Company> dbClient;
 
     public CompanyDAO(String name) {
         String url = BASE_URL + name;
-        dbClient = new DbClient(url);
+        dbClient = new CompanyDbClient(url);
         dbClient.run(CREATE_TABLE);
     }
 
 
     @Override
     public List<Company> findAll() {
-        return dbClient.selectCompanies(SELECT_ALL);
+        return dbClient.selectAll(SELECT_ALL);
     }
 
     @Override
     public Company findById(int id) {
-        Company company = dbClient.selectCompany(String.format(SELECT, id));
+        Company company = dbClient.select(String.format(SELECT, id));
         if (company != null) {
             System.out.println("Found company with id " + id);
             return company;

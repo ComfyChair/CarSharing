@@ -16,28 +16,27 @@ public class CarDAO implements DataAccessObject<Car> {
     private static final String SELECT_ALL = "SELECT * FROM CAR";
     private static final String SELECT = "SELECT * FROM CAR WHERE id = %d";
     private static final String INSERT_DATA = "INSERT INTO CAR VALUES (DEFAULT, '%s', '%d')";
-    private static final String UPDATE_DATA = "UPDATE CAR SET name " +
-            "= '%s' WHERE id = %d";
+    private static final String UPDATE_DATA = "UPDATE CAR SET name = '%s', company_id = '%d'" +
+            " WHERE id = %d";
     private static final String DELETE_DATA = "DELETE FROM CAR WHERE id = %d";
     private static final Path ROOT = Paths.get("src", "carsharing", "db");
     private static final String BASE_URL = "jdbc:h2:./" + ROOT + "/";
-    private final DbClient dbClient;
+    private final DbClient<Car> dbClient;
 
     public CarDAO(String name) {
         String url = BASE_URL + name;
-        dbClient = new DbClient(url);
+        dbClient = new CarDbClient(url);
         dbClient.run(CREATE_TABLE);
     }
 
-
     @Override
     public List<Car> findAll() {
-        return dbClient.selectCars(SELECT_ALL);
+        return dbClient.selectAll(SELECT_ALL);
     }
 
     @Override
     public Car findById(int id) {
-        Car car = dbClient.selectCar(String.format(SELECT, id));
+        Car car = dbClient.select(String.format(SELECT, id));
         if (car != null) {
             System.out.println("Found car with id " + id);
             return car;
@@ -55,7 +54,7 @@ public class CarDAO implements DataAccessObject<Car> {
 
     @Override
     public void update(Car car) {
-        dbClient.run(String.format(UPDATE_DATA, car.getName(), car.getId()));
+        dbClient.run(String.format(UPDATE_DATA, car.getName(), car.getCompanyId(), car.getId()));
     }
 
     @Override
