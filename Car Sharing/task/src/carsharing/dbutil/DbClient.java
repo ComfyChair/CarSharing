@@ -31,7 +31,7 @@ abstract class DbClient<T> {
         if (allObjects.isEmpty()) {
             return null;
         } else if (allObjects.size() > 1) {
-            throw new IllegalStateException("More than one car found for query: " + query);
+            throw new IllegalStateException("More than one object found for query: " + query);
         } else {
             return allObjects.getFirst();
         }
