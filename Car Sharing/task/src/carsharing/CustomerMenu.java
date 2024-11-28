@@ -14,7 +14,7 @@ public class CustomerMenu {
     private static final String CUSTOMER_MENU = """
             
             1. Rent a car
-            2. Return a car
+            2. Return a rented car
             3. My rented car
             0. Back""";
     private final Customer customer;
@@ -56,7 +56,10 @@ public class CustomerMenu {
         } else {
             Company company = CommonMenus.chooseCompany(scanner, companies);
             if (company != null) {
-                List<Car> cars = carDAO.findByCompanyId(company.getId());
+                List<Integer> rentedIds = customerDAO.findAll().stream()
+                        .map(Customer::getRentedCarId).toList();
+                List<Car> cars = carDAO.findByCompanyId(company.getId()).stream()
+                        .filter(car -> !rentedIds.contains(car.getId())).toList();
                 if (cars.isEmpty()) {
                     System.out.printf("No available cars in the %s company%n", company.getName());
                 } else {
@@ -78,7 +81,7 @@ public class CustomerMenu {
                     Car car = cars.get(choice - 1);
                     customer.setRentedCarId(car.getId());
                     customerDAO.update(customer);
-                    System.out.printf("You rented %s%n", car.getName());
+                    System.out.printf("You rented '%s'%n", car.getName());
                 } else if (choice > cars.size()) {
                     System.out.println("Invalid choice: " + choice);
                 }
