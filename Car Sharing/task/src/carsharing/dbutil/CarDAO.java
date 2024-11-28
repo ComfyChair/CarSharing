@@ -12,12 +12,12 @@ public class CarDAO implements DataAccessObject<Car> {
             "id INT GENERATED ALWAYS AS IDENTITY, " +
             "name VARCHAR_IGNORECASE(255) UNIQUE not NULL, " +
             "company_id INT NOT NULL, " +
-            "PRIMARY KEY (id)," +
+            "PRIMARY KEY (id), " +
             "FOREIGN KEY (company_id) REFERENCES COMPANY (id))";
     private static final String SELECT_ALL = "SELECT * FROM CAR";
     private static final String SELECT = "SELECT * FROM CAR WHERE id = %d";
     private static final String INSERT_DATA = "INSERT INTO CAR VALUES (DEFAULT, '%s', %d)";
-    private static final String UPDATE_DATA = "UPDATE CAR SET name = '%s', company_id = '%d'" +
+    private static final String UPDATE_DATA = "UPDATE CAR SET name = '%s', company_id = %d" +
             " WHERE id = %d";
     private static final String DELETE_DATA = "DELETE FROM CAR WHERE id = %d";
     private static final Path ROOT = Paths.get("src", "carsharing", "db");
@@ -39,7 +39,6 @@ public class CarDAO implements DataAccessObject<Car> {
     public Car findById(int id) {
         Car car = dbClient.select(String.format(SELECT, id));
         if (car != null) {
-            System.out.println("Found car with id " + id);
             return car;
         } else {
             System.out.println("Couldn't find car with id " + id);

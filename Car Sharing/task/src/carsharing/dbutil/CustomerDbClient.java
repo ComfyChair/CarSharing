@@ -22,7 +22,7 @@ public class CustomerDbClient extends DbClient<Customer> {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                int rentedCarId = rs.getInt("rented_car_id");
+                Integer rentedCarId = (Integer) rs.getObject("rented_car_id");
                 customer.add(new Customer(id, name, rentedCarId));
             }
         } catch (SQLException e) {

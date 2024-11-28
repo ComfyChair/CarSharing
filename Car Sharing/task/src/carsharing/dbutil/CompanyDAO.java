@@ -36,7 +36,6 @@ public class CompanyDAO implements DataAccessObject<Company> {
     public Company findById(int id) {
         Company company = dbClient.select(String.format(SELECT, id));
         if (company != null) {
-            System.out.println("Found company with id " + id);
             return company;
         } else {
             System.out.println("Couldn't find company with id " + id);

@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 public class ManagerMenu {
     private static final String MAIN_MENU = """
+            
             1. Company list
             2. Create a company
             0. Back""";

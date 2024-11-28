@@ -1,5 +1,7 @@
 package carsharing;
 
+import carsharing.dbutil.CarDAO;
+import carsharing.dbutil.CompanyDAO;
 import carsharing.dbutil.CustomerDAO;
 import carsharing.model.Customer;
 
@@ -8,6 +10,7 @@ import java.util.Scanner;
 
 public class CarSharingApp {
     private static final String LOGIN_MENU = """
+            
             1. Log in as a manager
             2. Log in as a customer
             3. Create a customer
@@ -20,6 +23,9 @@ public class CarSharingApp {
     public CarSharingApp(String dbName) {
         this.scanner = new Scanner(System.in);
         this.dbName = dbName;
+        // create Company and Car table if they don't exist
+        new CompanyDAO(dbName);
+        new CarDAO(dbName);
         this.customerDAO = new CustomerDAO(dbName);
         loginMenu();
     }
@@ -57,7 +63,7 @@ public class CarSharingApp {
         }
     }
 
-    private static void customerChoiceMenu(List<Customer> customers) {
+    private void customerChoiceMenu(List<Customer> customers) {
         System.out.println("\nCustomer list:");
         for (int i = 0; i < customers.size(); i++) {
             Customer customer = customers.get(i);
@@ -69,6 +75,6 @@ public class CarSharingApp {
     private void createCustomer() {
         System.out.println("\nEnter the customer name:");
         String name = scanner.nextLine();
-        customerDAO.add(new Customer(name, null));
+        customerDAO.add(new Customer(name));
     }
 }

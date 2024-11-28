@@ -12,6 +12,7 @@ import java.util.Scanner;
 
 public class CustomerMenu {
     private static final String CUSTOMER_MENU = """
+            
             1. Rent a car
             2. Return a car
             3. My rented car
@@ -38,7 +39,7 @@ public class CustomerMenu {
             input = scanner.nextLine();
             switch (input) {
                 case "0" -> {}
-                case "1" -> rentCar();
+                case "1" -> rentMenu();
                 case "2" -> returnCar();
                 case "3" -> rentalInfo();
                 default -> System.out.println("Invalid input");
@@ -46,7 +47,7 @@ public class CustomerMenu {
         }
     }
 
-    private void rentCar() {
+    private void rentMenu() {
         List<Company> companies = companyDAO.findAll();
         if (companies.isEmpty()) {
             System.out.println("The company list is empty!");
@@ -56,24 +57,33 @@ public class CustomerMenu {
             Company company = CommonMenus.chooseCompany(scanner, companies);
             if (company != null) {
                 List<Car> cars = carDAO.findByCompanyId(company.getId());
-                CommonMenus.carChoiceMenu(cars, "Choose a car:");
-                int choice = -1;
-                while (choice < 0) {
-                    String input = scanner.nextLine();
-                    try {
-                        choice = Integer.parseInt(input);
-                        if (choice < 0 || choice > companies.size()) {
-                            Car car = cars.get(choice - 1);
-                            customer.setRentedCarId(car.getId());
-                            customerDAO.update(customer);
-                        } else {
-                            choice = -1;
-                            System.out.println("Invalid choice");
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("\nInvalid input!");
-                    }
+                if (cars.isEmpty()) {
+                    System.out.printf("No available cars in the %s company%n", company.getName());
+                } else {
+                    chooseCar(cars);
                 }
+            }
+        }
+    }
+
+    private void chooseCar(List<Car> cars) {
+        CommonMenus.carChoiceMenu(cars, "Choose a car:");
+        System.out.println("0. Back");
+        int choice = -1;
+        while (choice < 0 || choice > cars.size()) {
+            String input = scanner.nextLine();
+            try {
+                choice = Integer.parseInt(input);
+                if (choice > 0 && choice <= cars.size()) {
+                    Car car = cars.get(choice - 1);
+                    customer.setRentedCarId(car.getId());
+                    customerDAO.update(customer);
+                    System.out.printf("You rented %s%n", car.getName());
+                } else if (choice > cars.size()) {
+                    System.out.println("Invalid choice: " + choice);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("\nInvalid input!");
             }
         }
     }
@@ -89,9 +99,15 @@ public class CustomerMenu {
     }
 
     private void rentalInfo() {
-        Car rental = carDAO.findById(customer.getRentedCarId());
-        Company company = companyDAO.findById(rental.getCompanyId());
-        System.out.printf("Your rented car:\n%s", rental.getName());
-        System.out.printf("Company:\n%s", company.getName());
+        Integer rentedCarId = customer.getRentedCarId();
+        if (rentedCarId == null) {
+            System.out.println("You didn't rent a car!");
+        }
+        else {
+            Car rental = carDAO.findById(rentedCarId);
+            Company company = companyDAO.findById(rental.getCompanyId());
+            System.out.printf("Your rented car:\n%s\n", rental.getName());
+            System.out.printf("Company:\n%s\n", company.getName());
+        }
     }
 }

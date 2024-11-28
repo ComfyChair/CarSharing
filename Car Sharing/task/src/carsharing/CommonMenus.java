@@ -16,15 +16,14 @@ class CommonMenus {
         }
         System.out.println("0. Back");
         int choice = -1;
-        while (choice < 0) {
+        while (choice < 0 || choice > companies.size()) {
             String input = scanner.nextLine();
             try {
                 choice = Integer.parseInt(input);
-                if (choice < 0 || choice > companies.size()) {
+                if (choice > 0 && choice <= companies.size()) {
                     return companies.get(choice - 1);
-                } else {
-                    choice = -1;
-                    System.out.println("Invalid choice");
+                } else if (choice > companies.size()) {
+                    System.out.println("Invalid choice: " + choice);
                 }
             } catch (NumberFormatException e) {
                 System.out.println("\nInvalid input!");
