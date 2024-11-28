@@ -4,6 +4,7 @@ import carsharing.model.Car;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 
 public class CarDAO implements DataAccessObject<Car> {
@@ -15,7 +16,7 @@ public class CarDAO implements DataAccessObject<Car> {
             "FOREIGN KEY (company_id) REFERENCES COMPANY (id))";
     private static final String SELECT_ALL = "SELECT * FROM CAR";
     private static final String SELECT = "SELECT * FROM CAR WHERE id = %d";
-    private static final String INSERT_DATA = "INSERT INTO CAR VALUES (DEFAULT, '%s', '%d')";
+    private static final String INSERT_DATA = "INSERT INTO CAR VALUES (DEFAULT, '%s', %d)";
     private static final String UPDATE_DATA = "UPDATE CAR SET name = '%s', company_id = '%d'" +
             " WHERE id = %d";
     private static final String DELETE_DATA = "DELETE FROM CAR WHERE id = %d";
@@ -44,6 +45,13 @@ public class CarDAO implements DataAccessObject<Car> {
             System.out.println("Couldn't find car with id " + id);
             return null;
         }
+    }
+
+    public List<Car> findByCompanyId(int companyId) {
+        return findAll().stream()
+                .filter(car -> car.getCompanyId() == companyId)
+                .sorted(Comparator.comparingInt(Car::getId))
+                .toList();
     }
 
     @Override

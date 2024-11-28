@@ -27,7 +27,6 @@ public class CompanyDAO implements DataAccessObject<Company> {
         dbClient.run(CREATE_TABLE);
     }
 
-
     @Override
     public List<Company> findAll() {
         return dbClient.selectAll(SELECT_ALL);

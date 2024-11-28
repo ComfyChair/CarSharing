@@ -3,15 +3,16 @@ package carsharing.model;
 public class Customer {
     private int id;
     private final String name;
-    private final int rentedCarId;
 
-    public Customer(int id, String name, int rentedCarId) {
+    private Integer rentedCarId;
+
+    public Customer(int id, String name, Integer rentedCarId) {
         this.id = id;
         this.name = name;
         this.rentedCarId = rentedCarId;
     }
 
-    public Customer(String name, int rentedCarId) {
+    public Customer(String name, Integer rentedCarId) {
         this.name = name;
         this.rentedCarId = rentedCarId;
     }
@@ -24,8 +25,11 @@ public class Customer {
         return name;
     }
 
-    public int getRentedCarId() {
+    public Integer getRentedCarId() {
         return rentedCarId;
     }
 
+    public void setRentedCarId(Integer rentedCarId) {
+        this.rentedCarId = rentedCarId;
+    }
 }
